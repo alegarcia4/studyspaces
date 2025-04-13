@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Search, MapPin } from "lucide-react";
@@ -13,7 +12,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
             <MapPin className="h-6 w-6 text-studyspot-purple" />
-            <span className="font-bold text-xl text-studyspot-midnight">StudySpot</span>
+            <span className="font-bold text-xl text-studyspot-midnight">StudySpace</span>
           </Link>
 
           {/* Desktop menu */}
@@ -21,11 +20,11 @@ const Navbar = () => {
             <Link to="/" className="text-studyspot-midnight hover:text-studyspot-purple transition-colors">
               Home
             </Link>
-            <Link to="/spots" className="text-studyspot-midnight hover:text-studyspot-purple transition-colors">
-              Find Spots
+            <Link to="/spaces" className="text-studyspot-midnight hover:text-studyspot-purple transition-colors">
+              Find Spaces
             </Link>
             <Link to="/submit" className="text-studyspot-midnight hover:text-studyspot-purple transition-colors">
-              Add a Spot
+              Add a Space
             </Link>
           </div>
 
@@ -59,18 +58,18 @@ const Navbar = () => {
                 Home
               </Link>
               <Link 
-                to="/spots" 
+                to="/spaces" 
                 className="px-4 py-2 text-studyspot-midnight hover:bg-studyspot-soft-purple rounded-md transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Find Spots
+                Find Spaces
               </Link>
               <Link 
                 to="/submit" 
                 className="px-4 py-2 text-studyspot-midnight hover:bg-studyspot-soft-purple rounded-md transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Add a Spot
+                Add a Space
               </Link>
               <div className="pt-2 border-t border-gray-100 mt-2">
                 <Button variant="default" className="w-full bg-studyspot-purple hover:bg-studyspot-light-purple">

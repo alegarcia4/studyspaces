@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
@@ -8,8 +7,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: 33.8816, // CSUF-ish
-  lng: -117.8854
+  lat: 33.8826,
+  lng: -117.8851,
 };
 
 const Map = () => {

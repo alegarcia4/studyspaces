@@ -2,7 +2,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
-    darkMode: ["class"],
+    darkMode: ["class"], // Tells Tailwind to look for the .dark class
     content: [
         "./pages/**/*.{ts,tsx}",
         "./components/**/*.{ts,tsx}",
@@ -53,16 +53,6 @@ export default {
                     DEFAULT: "hsl(var(--card))",
                     foreground: "hsl(var(--card-foreground))",
                 },
-                sidebar: {
-                    DEFAULT: 'hsl(var(--sidebar-background))',
-                    foreground: 'hsl(var(--sidebar-foreground))',
-                    primary: 'hsl(var(--sidebar-primary))',
-                    'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-                    accent: 'hsl(var(--sidebar-accent))',
-                    'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-                    border: 'hsl(var(--sidebar-border))',
-                    ring: 'hsl(var(--sidebar-ring))'
-                },
                 studyspot: {
                     purple: "#6E59A5",
                     'light-purple': "#9B87F5",
@@ -70,12 +60,6 @@ export default {
                     midnight: "#1A1F2C",
                     neutral: "#8E9196",
                 },
-                'space-dark': 'hsl(225 25% 6%)',
-                'space-medium': 'hsl(225 20% 9%)',
-                'space-light': 'hsl(217 15% 22%)',
-                'space-accent': 'hsl(260 75% 70%)',
-                'space-text': 'hsl(215 20% 88%)',
-                'space-subtle-text': 'hsl(215 15% 55%)',
             },
             borderRadius: {
                 lg: "var(--radius)",
@@ -83,22 +67,10 @@ export default {
                 sm: "calc(var(--radius) - 4px)",
             },
             keyframes: {
-                "accordion-down": {
-                    from: { height: "0" },
-                    to: { height: "var(--radix-accordion-content-height)" }
-                },
-                "accordion-up": {
-                    from: { height: "var(--radix-accordion-content-height)" },
-                    to: { height: "0" }
-                },
-                "fade-in": {
-                    "0%": { opacity: "0" },
-                    "100%": { opacity: "1" }
-                },
-                "caret-blink": {
-                    "0%,70%,100%": { opacity: "1" },
-                    "20%,50%": { opacity: "0" }
-                },
+                "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },
+                "accordion-up": { from: { height: "var(--radix-accordion-content-height)" }, to: { height: "0" } },
+                "fade-in": { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
+                "caret-blink": { "0%,70%,100%": { opacity: "1" }, "20%,50%": { opacity: "0" } },
             },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
@@ -107,28 +79,44 @@ export default {
                 "caret-blink": "caret-blink 1.25s ease-out infinite",
             },
             typography: ({ theme }: { theme: any }) => ({
-                DEFAULT: {
+                DEFAULT: { /* ... light mode prose ... */ },
+                invert: { // Dark mode styles override
                     css: {
-                        '--tw-prose-body': theme('colors.space-text'),
-                        '--tw-prose-headings': theme('colors.space-text'),
-                        '--tw-prose-lead': theme('colors.space-subtle-text'),
-                        '--tw-prose-links': theme('colors.primary.DEFAULT'),
-                        '--tw-prose-bold': theme('colors.space-text'),
-                        '--tw-prose-counters': theme('colors.space-subtle-text'),
-                        '--tw-prose-bullets': theme('colors.border'),
-                        '--tw-prose-hr': theme('colors.border'),
-                        '--tw-prose-quotes': theme('colors.space-text'),
-                        '--tw-prose-quote-borders': theme('colors.border'),
-                        '--tw-prose-captions': theme('colors.space-subtle-text'),
-                        '--tw-prose-code': theme('colors.space-text'),
-                        '--tw-prose-pre-code': theme('colors.space-text'),
-                        '--tw-prose-pre-bg': theme('colors.space-medium'),
-                        '--tw-prose-th-borders': theme('colors.border'),
-                        '--tw-prose-td-borders': theme('colors.border'),
+                        '--tw-prose-body': 'hsl(var(--foreground) / 0.9)', // Use adjusted foreground for body
+                        '--tw-prose-headings': 'hsl(var(--foreground))',
+                        '--tw-prose-lead': 'hsl(var(--muted-foreground))',
+                        '--tw-prose-links': 'hsl(var(--primary))',
+                        '--tw-prose-bold': 'hsl(var(--foreground))',
+                        '--tw-prose-counters': 'hsl(var(--muted-foreground))',
+                        '--tw-prose-bullets': 'hsl(var(--border))',
+                        '--tw-prose-hr': 'hsl(var(--border))',
+                        '--tw-prose-quotes': 'hsl(var(--muted-foreground))',
+                        '--tw-prose-quote-borders': 'hsl(var(--border))',
+                        '--tw-prose-captions': 'hsl(var(--muted-foreground))',
+                        '--tw-prose-code': 'hsl(var(--accent-foreground))',
+                        '--tw-prose-pre-code': 'hsl(var(--secondary-foreground))',
+                        '--tw-prose-pre-bg': 'hsl(var(--secondary))',
+                        '--tw-prose-th-borders': 'hsl(var(--border))',
+                        '--tw-prose-td-borders': 'hsl(var(--border))',
+                         // Explicit heading colors for clarity
+                        h1: { color: 'hsl(var(--foreground))' },
+                        h2: { color: 'hsl(var(--foreground))' },
+                        h3: { color: 'hsl(var(--foreground))' },
+                        h4: { color: 'hsl(var(--foreground))' },
+                        h5: { color: 'hsl(var(--foreground))' },
+                        h6: { color: 'hsl(var(--foreground))' },
+                        // Ensure links inherit correctly
+                        a: { color: 'hsl(var(--primary))'},
+                        strong: { color: 'hsl(var(--foreground))' },
+                        code: { color: 'hsl(var(--accent-foreground))', backgroundColor: 'hsl(var(--accent) / 0.1)', padding: '0.2em 0.4em', borderRadius: '0.25rem', fontSize: '0.9em'},
+                        blockquote: { color: 'hsl(var(--muted-foreground))', borderLeftColor: 'hsl(var(--border))' },
                     },
                 },
             }),
         },
     },
-    plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+    plugins: [
+        require("tailwindcss-animate"),
+        require("@tailwindcss/typography")
+    ],
 } satisfies Config;

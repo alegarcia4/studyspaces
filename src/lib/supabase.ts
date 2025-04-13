@@ -26,6 +26,7 @@ export const supabase = (supabaseUrl && supabaseAnonKey)
           onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
           signInWithPassword: async () => ({ error: { message: 'Supabase not configured' } }),
           signUp: async () => ({ error: { message: 'Supabase not configured' } }),
+           signInWithOAuth: async () => ({ error: { message: 'Supabase not configured' } }), // Mock OAuth too
           signOut: async () => ({ error: { message: 'Supabase not configured' } }),
         },
         from: () => ({

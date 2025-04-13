@@ -1,240 +1,243 @@
-
+// src/components/MapView.tsx
 import { useState, useEffect, useCallback, useRef } from "react";
 import { StudySpot } from "@/data/studySpots";
-import { MapPin } from "lucide-react";
+import { MapPin, Plus, Minus } from "lucide-react"; // Changed zoom icons
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from "@react-google-maps/api";
+import { mapStyleDark } from "@/lib/mapStyles"; // Import the style
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
+import { useNavigate } from "react-router-dom"; // Import for navigation
 
 // Define the map container style
 const mapContainerStyle = {
-  width: "100%",
-  height: "100%",
-  minHeight: "400px",
+    width: "100%",
+    height: "100%",
 };
 
 // Define map UI options
 const options = {
-  disableDefaultUI: false,
-  zoomControl: true,
+    disableDefaultUI: true, // Cleaner look, add custom controls
+    zoomControl: false, // Disable default zoom, use custom
+    streetViewControl: false,
+    mapTypeControl: false,
+    fullscreenControl: false,
+    styles: mapStyleDark, // Apply the dark style
+    gestureHandling: "cooperative", // Better for touch devices
 };
 
 // Cal State Fullerton coordinates
 const csufCoordinates = { lat: 33.8816, lng: -117.8854 };
 
 interface MapViewProps {
-  spots: StudySpot[];
-  userLocation: { lat: number; lng: number } | null;
+    spots: StudySpot[];
+    userLocation: { lat: number; lng: number } | null;
 }
 
 const MapView = ({ spots, userLocation }: MapViewProps) => {
-  const { toast } = useToast();
-  const [selectedSpot, setSelectedSpot] = useState<StudySpot | null>(null);
-  const mapRef = useRef<google.maps.Map | null>(null);
-  
-  // Load the Google Maps script with the environment variable
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
-    libraries: ["places"],
-  });
+    const { toast } = useToast();
+    const [selectedSpot, setSelectedSpot] = useState<StudySpot | null>(null);
+    const mapRef = useRef<google.maps.Map | null>(null);
+    const navigate = useNavigate(); // Hook for navigation
 
-  // Calculate map center based on spots or user location or default to CSUF
-  const getMapCenter = useCallback(() => {
-    if (userLocation) {
-      return { lat: userLocation.lat, lng: userLocation.lng };
-    }
-    
-    // If we have spots with valid coordinates, use average of spots
-    const validSpots = spots.filter(spot => {
-      const [lat, lng] = spot.address.split(',').map(coord => parseFloat(coord.trim()));
-      return !isNaN(lat) && !isNaN(lng);
+    // Load the Google Maps script
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
+        libraries: ["places"], // Keep places if needed elsewhere, otherwise remove
     });
-    
-    if (validSpots.length > 0) {
-      const latSum = validSpots.reduce((sum, spot) => {
-        const lat = parseFloat(spot.address.split(',')[0].trim());
-        return sum + lat;
-      }, 0);
-      
-      const lngSum = validSpots.reduce((sum, spot) => {
-        const lng = parseFloat(spot.address.split(',')[1].trim());
-        return sum + lng;
-      }, 0);
-      
-      return {
-        lat: latSum / validSpots.length,
-        lng: lngSum / validSpots.length
-      };
+
+    // Calculate map center
+    const getMapCenter = useCallback(() => {
+        if (userLocation) {
+            return userLocation;
+        }
+        // Simple fallback to CSUF if no user location
+        return csufCoordinates;
+    }, [userLocation]);
+
+    const mapCenter = getMapCenter();
+
+    const onMapLoad = useCallback((map: google.maps.Map) => {
+        mapRef.current = map;
+         // Fit bounds to markers if spots exist? Optional.
+         if (spots.length > 0) {
+            const bounds = new window.google.maps.LatLngBounds();
+            spots.forEach(spot => {
+                if (spot.coordinates) {
+                    bounds.extend(spot.coordinates);
+                }
+            });
+             if (userLocation) {
+                 bounds.extend(userLocation);
+             } else {
+                 bounds.extend(csufCoordinates); // Include default center if no user loc
+             }
+            // map.fitBounds(bounds); // This might zoom out too much initially
+
+            // Optional: Add padding to fitBounds
+            // map.fitBounds(bounds, 100); // 100px padding
+         }
+    }, [spots, userLocation]); // Add dependencies
+
+    const handleMarkerClick = (spot: StudySpot) => {
+        setSelectedSpot(spot);
+        if (mapRef.current && spot.coordinates) {
+            mapRef.current.panTo(spot.coordinates);
+        }
+    };
+
+    const handleZoomIn = () => {
+        if (mapRef.current) {
+            const currentZoom = mapRef.current.getZoom() || 13; // Default zoom if undefined
+            mapRef.current.setZoom(currentZoom + 1);
+        }
+    };
+
+    const handleZoomOut = () => {
+        if (mapRef.current) {
+            const currentZoom = mapRef.current.getZoom() || 13;
+            mapRef.current.setZoom(currentZoom - 1);
+        }
+    };
+
+    const handleInfoWindowClick = (spotId: string) => {
+        navigate(`/spot/${spotId}`);
+    };
+
+    // Loading/Error States
+    if (loadError) {
+        return (
+            <div className="bg-card rounded-lg shadow-md overflow-hidden h-full flex flex-col text-card-foreground border border-destructive">
+                <div className="p-4 border-b border-destructive">
+                    <h3 className="font-medium text-destructive-foreground">Map Error</h3>
+                </div>
+                <div className="flex-1 relative bg-destructive/10 min-h-[400px] flex items-center justify-center p-4 text-center">
+                    <p className="text-sm text-destructive-foreground">Could not load Google Maps. Please check the API key and network connection.</p>
+                </div>
+            </div>
+        );
     }
-    
-    // Default to a central point if no user location
-    return { lat: 33.8826, lng: -117.8851 }; // csuf
-  }, [spots, userLocation]);
 
-  const mapCenter = getMapCenter();
-  
-  // Save map instance when it loads
-  const onMapLoad = useCallback((map: google.maps.Map) => {
-    mapRef.current = map;
-  }, []);
-
-  // Handle spot click
-  const handleSpotClick = (spot: StudySpot) => {
-    setSelectedSpot(spot);
-    toast({
-      title: spot.name,
-      description: `${spot.distance} away - ${spot.hours}`,
-    });
-  };
-
-  // Handle zoom in
-  const handleZoomIn = () => {
-    if (mapRef.current) {
-      mapRef.current.setZoom((mapRef.current.getZoom() || 10) + 1);
+    if (!isLoaded) {
+        return (
+            <div className="bg-card rounded-lg shadow-md overflow-hidden h-full flex flex-col text-card-foreground border border-border">
+                <div className="p-4 border-b border-border">
+                    <h3 className="font-medium">Map View</h3>
+                    <p className="text-xs text-muted-foreground mt-1">Loading map...</p>
+                </div>
+                <div className="flex-1 relative bg-muted min-h-[400px]">
+                    <Skeleton className="absolute inset-0 w-full h-full" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        );
     }
-  };
 
-  // Handle zoom out
-  const handleZoomOut = () => {
-    if (mapRef.current) {
-      mapRef.current.setZoom((mapRef.current.getZoom() || 10) - 1);
-    }
-  };
-  
-  // Show loading state
-  if (loadError) {
+    // Map Render
     return (
-      <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col">
-        <div className="p-4 border-b">
-          <h3 className="font-medium">Map View</h3>
-          <p className="text-xs text-studyspot-neutral mt-1">
-            Error loading maps
-          </p>
-        </div>
-        <div className="flex-1 relative bg-gray-100 min-h-[400px] flex items-center justify-center">
-          <p>Error loading Google Maps. Please check your internet connection.</p>
-        </div>
-      </div>
-    );
-  }
+        <div className="bg-card rounded-lg shadow-md overflow-hidden h-full flex flex-col border border-border">
+            <div className="p-4 border-b border-border">
+                <h3 className="font-medium text-card-foreground">Map View</h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                    {spots.length} study spots shown
+                </p>
+            </div>
 
-  if (!isLoaded) {
-    return (
-      <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col">
-        <div className="p-4 border-b">
-          <h3 className="font-medium">Map View</h3>
-          <p className="text-xs text-studyspot-neutral mt-1">
-            Loading map...
-          </p>
-        </div>
-        <div className="flex-1 relative bg-gray-100 min-h-[400px]">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="animate-spin h-8 w-8 border-4 border-studyspot-purple border-t-transparent rounded-full"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+            <div className="flex-1 relative bg-muted">
+                <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    center={mapCenter}
+                    zoom={14} // Slightly more zoomed in default
+                    options={options}
+                    onLoad={onMapLoad}
+                    onClick={() => setSelectedSpot(null)} // Close info window on map click
+                >
+                    {/* User location marker */}
+                    {userLocation && (
+                        <Marker
+                            position={userLocation}
+                            icon={{
+                                url: '/location-pin.svg', // Custom SVG icon for user location
+                                scaledSize: new google.maps.Size(24, 24),
+                                anchor: new google.maps.Point(12, 24),
+                            }}
+                            title="Your Location"
+                            zIndex={10} // Ensure user pin is above others
+                        />
+                    )}
 
-  return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col">
-      <div className="p-4 border-b">
-        <h3 className="font-medium">Map View</h3>
-        <p className="text-xs text-studyspot-neutral mt-1">
-          {spots.length} study spots shown on map
-        </p>
-      </div>
-      
-      <div className="flex-1 relative bg-gray-100 min-h-[400px]">
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={mapCenter}
-          zoom={13}
-          options={options}
-          onLoad={onMapLoad}
-        >
-          {/* User location marker */}
-          {userLocation && (
-            <Marker
-              position={{ lat: userLocation.lat, lng: userLocation.lng }}
-              icon={{
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 7,
-                fillColor: "#4285F4",
-                fillOpacity: 1,
-                strokeColor: "#FFFFFF",
-                strokeWeight: 2,
-              }}
-              title="Your Location"
-            />
-          )}
-          
-          {/* Cal State Fullerton marker */}
-          <Marker
-            position={csufCoordinates}
-            icon={{
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 9,
-              fillColor: "#FFA500", // Orange for CSUF
-              fillOpacity: 0.8,
-              strokeColor: "#FFFFFF",
-              strokeWeight: 2,
-            }}
-            title="Cal State Fullerton"
-          />
-          
-          {/* Study spot markers */}
-          {spots.map((spot) => {
-            if (!spot.coordinates) {
-              console.warn(`No coordinates for spot: ${spot.name}`);
-              return null;
-            }
-            
-            return (
-              <Marker
-                key={spot.id}
-                position={spot.coordinates}
-                onClick={() => handleSpotClick(spot)}
-                icon={{
-                  path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                  scale: 6,
-                  fillColor: "#9759f5", // studyspot-purple
-                  fillOpacity: 1,
-                  strokeColor: "#FFFFFF",
-                  strokeWeight: 1,
-                }}
-                title={spot.name}
-              />
-            );
-          })}
-          
-          {/* Info window for selected spot */}
-          {selectedSpot && (
-            <InfoWindow
-              position={selectedSpot.coordinates}
-              onCloseClick={() => setSelectedSpot(null)}
-            >
-              <div className="p-2">
-                <h3 className="font-semibold">{selectedSpot.name}</h3>
-                <p className="text-xs">{selectedSpot.distance} away</p>
-                <p className="text-xs">{selectedSpot.hours}</p>
-              </div>
-            </InfoWindow>
-          )}
-        </GoogleMap>
-        
-        {/* Map controls */}
-        <div className="absolute right-4 bottom-4 flex flex-col gap-2">
-          <Button size="icon" variant="secondary" className="bg-white shadow-md h-8 w-8" onClick={handleZoomIn}>
-            <span className="text-lg font-medium">+</span>
-          </Button>
-          <Button size="icon" variant="secondary" className="bg-white shadow-md h-8 w-8" onClick={handleZoomOut}>
-            <span className="text-lg font-medium">−</span>
-          </Button>
+                    {/* Cal State Fullerton marker (optional, can be subtle) */}
+                    <Marker
+                        position={csufCoordinates}
+                        icon={{
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 5,
+                            fillColor: "#FFA500",
+                            fillOpacity: 0.7,
+                            strokeWeight: 0, // No stroke for subtle look
+                        }}
+                        title="Cal State Fullerton"
+                        zIndex={1}
+                    />
+
+                    {/* Study spot markers */}
+                    {spots.map((spot) => {
+                        if (!spot.coordinates) return null;
+                        return (
+                            <Marker
+                                key={spot.id}
+                                position={spot.coordinates}
+                                onClick={() => handleMarkerClick(spot)}
+                                icon={{ // Custom icon for spots
+                                    url: '/map-marker-icon.svg', // Example path, create this SVG
+                                    scaledSize: new google.maps.Size(30, 30),
+                                    anchor: new google.maps.Point(15, 30), // Point at the bottom center
+                                }}
+                                title={spot.name}
+                                zIndex={5}
+                            />
+                        );
+                    })}
+
+                    {/* Info window for selected spot */}
+                    {selectedSpot && selectedSpot.coordinates && (
+                        <InfoWindow
+                            position={selectedSpot.coordinates}
+                            onCloseClick={() => setSelectedSpot(null)}
+                            options={{
+                                pixelOffset: new google.maps.Size(0, -35), // Adjust offset based on marker size
+                                disableAutoPan: true // Prevent map panning when opening
+                             }}
+                        >
+                            {/* Style the InfoWindow content */}
+                             <div className="p-2 bg-popover text-popover-foreground rounded shadow-lg max-w-[200px] text-xs" style={{ fontFamily: 'sans-serif' }}> {/* Add font family */}
+                                <h3 className="font-semibold text-sm mb-1 truncate">{selectedSpot.name}</h3>
+                                <p className="text-muted-foreground mb-1 truncate">{selectedSpot.distance ?? 'N/A'} away</p>
+                                <p className="text-muted-foreground truncate">{selectedSpot.hours}</p>
+                                 <Button size="sm" variant="link" className="p-0 h-auto mt-1 text-xs text-primary" onClick={() => handleInfoWindowClick(selectedSpot.id)}>
+                                     View Details
+                                 </Button>
+                             </div>
+                        </InfoWindow>
+                    )}
+                </GoogleMap>
+
+                {/* Custom Map controls */}
+                <div className="absolute right-4 bottom-4 flex flex-col gap-2">
+                    <Button size="icon" variant="secondary" className="bg-card/80 backdrop-blur-sm shadow-md h-8 w-8 border border-border hover:bg-secondary" onClick={handleZoomIn}>
+                        <Plus className="h-4 w-4" />
+                        <span className="sr-only">Zoom In</span>
+                    </Button>
+                    <Button size="icon" variant="secondary" className="bg-card/80 backdrop-blur-sm shadow-md h-8 w-8 border border-border hover:bg-secondary" onClick={handleZoomOut}>
+                        <Minus className="h-4 w-4" />
+                         <span className="sr-only">Zoom Out</span>
+                    </Button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default MapView;

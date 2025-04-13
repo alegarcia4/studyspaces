@@ -3,61 +3,62 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Define CSS Variables outside of layers */
+:root {
+  /* Light Theme Definitions (Reference Only) */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 260 70% 55%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 260 70% 65%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 260 70% 55%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Darker Space Theme - Applied via html tag */
+  --background: 228 15% 5%;    /* Almost black */
+  --foreground: 210 20% 96%;    /* Brighter white text */
+  --card: 228 12% 8%;        /* Very dark grey card */
+  --card-foreground: 210 20% 96%;
+  --popover: 228 18% 4%;       /* Darkest popover */
+  --popover-foreground: 210 20% 96%;
+  --primary: 260 80% 75%;       /* Brighter Purple */
+  --primary-foreground: 230 20% 10%; /* Dark text for contrast on primary */
+  --secondary: 225 10% 12%;      /* Darker secondary */
+  --secondary-foreground: 210 15% 85%; /* Slightly brighter secondary text */
+  --muted: 225 10% 12%;
+  --muted-foreground: 215 15% 50%;    /* Greyer muted text */
+  --accent: 260 70% 65%;        /* Vibrant accent purple */
+  --accent-foreground: 210 20% 98%;   /* Almost white text on accent */
+  --destructive: 0 70% 55%;       /* Brighter destructive red */
+  --destructive-foreground: 210 20% 98%;
+  --border: 220 10% 18%;        /* Darker, less visible border */
+  --input: 220 10% 18%;         /* Input matches border */
+  --ring: 260 80% 75%;          /* Focus ring matches primary */
+  --radius: 0.5rem;
+}
+
 @layer base {
-  :root {
-    /* Light Theme Definitions */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 260 70% 55%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 260 70% 65%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 260 70% 55%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    /* Dark Theme / Space Theme */
-    --background: 225 25% 6%;   /* hsl(225, 25%, 6%) */
-    --foreground: 215 20% 88%;   /* hsl(215, 20%, 88%) */
-    --card: 225 20% 9%;       /* hsl(225, 20%, 9%) */
-    --card-foreground: 215 20% 88%; /* hsl(215, 20%, 88%) */
-    --popover: 225 30% 5%;      /* hsl(225, 30%, 5%) */
-    --popover-foreground: 215 20% 88%; /* hsl(215, 20%, 88%) */
-    --primary: 260 75% 70%;      /* hsl(260, 75%, 70%) */
-    --primary-foreground: 225 25% 10%; /* hsl(225, 25%, 10%) */
-    --secondary: 225 15% 15%;     /* hsl(225, 15%, 15%) */
-    --secondary-foreground: 215 20% 80%; /* hsl(215, 20%, 80%) */
-    --muted: 225 15% 15%;         /* hsl(225, 15%, 15%) */
-    --muted-foreground: 215 15% 55%;   /* hsl(215, 15%, 55%) */
-    --accent: 260 65% 60%;       /* hsl(260, 65%, 60%) */
-    --accent-foreground: 215 20% 95%;  /* hsl(215, 20%, 95%) */
-    --destructive: 0 70% 45%;      /* hsl(0, 70%, 45%) */
-    --destructive-foreground: 215 20% 95%; /* hsl(215, 20%, 95%) */
-    --border: 217 15% 22%;       /* hsl(217, 15%, 22%) */
-    --input: 217 15% 22%;        /* hsl(217, 15%, 22%) */
-    --ring: 260 75% 70%;         /* hsl(260, 75%, 70%) */
-    --radius: 0.5rem;
-  }
-
   * {
-    @apply border-border;
+    @apply border-border; /* Apply border color variable */
   }
 
   html {
-    @apply dark; /* Force dark mode */
+    /* Don't @apply dark here */
     scroll-behavior: smooth;
   }
 
@@ -66,6 +67,7 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
+  /* Apply base styles without complex @apply */
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold tracking-tight text-foreground;
   }
@@ -73,14 +75,36 @@
   a {
     @apply text-primary transition-colors duration-200 hover:text-primary/80;
   }
+
+  /* Base prose styles can go here if needed, or rely on the plugin */
+  .prose {
+      color: hsl(var(--foreground) / 0.9);
+  }
+  .dark .prose {
+      /* Define prose dark variables - Tailwind Typography plugin uses these */
+      --tw-prose-body: hsl(var(--foreground) / 0.9);
+      --tw-prose-headings: hsl(var(--foreground));
+      --tw-prose-lead: hsl(var(--muted-foreground));
+      --tw-prose-links: hsl(var(--primary));
+      --tw-prose-bold: hsl(var(--foreground));
+      --tw-prose-counters: hsl(var(--muted-foreground));
+      --tw-prose-bullets: hsl(var(--border));
+      --tw-prose-hr: hsl(var(--border));
+      --tw-prose-quotes: hsl(var(--muted-foreground));
+      --tw-prose-quote-borders: hsl(var(--border));
+      --tw-prose-captions: hsl(var(--muted-foreground));
+      --tw-prose-code: hsl(var(--accent-foreground));
+      --tw-prose-pre-code: hsl(var(--secondary-foreground));
+      --tw-prose-pre-bg: hsl(var(--secondary));
+      --tw-prose-th-borders: hsl(var(--border));
+      --tw-prose-td-borders: hsl(var(--border));
+  }
 }
 
-/* Utilities */
 @layer utilities {
   .shadow-spot {
-    box-shadow: 0 6px 20px -6px hsla(var(--primary) / 0.2), 0 4px 10px -6px hsla(var(--primary) / 0.15);
+    box-shadow: 0 6px 20px -6px hsla(var(--primary) / 0.25), 0 4px 10px -6px hsla(var(--primary) / 0.15);
   }
-
   .gradient-text {
     @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }

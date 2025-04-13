@@ -23,7 +23,6 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/spots" element={<ListingPage />} />
-            <Route path="/spaces" element={<ListingPage />} />
             <Route path="/spot/:id" element={<DetailPage />} />
             <Route path="/submit" element={<SubmitSpotPage />} />
             <Route path="*" element={<NotFound />} />

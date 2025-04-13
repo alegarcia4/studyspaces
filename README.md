@@ -1,71 +1,73 @@
-# 📍 Study Spots Finder
+# Welcome to your Lovable project
 
-A web app that helps users find ideal study locations nearby — powered by the Google Maps API.
+## Project info
 
-![App Screenshot](screenshot.png)
-*Click the image above to try the live demo!*
+**URL**: https://lovable.dev/projects/b3018b99-9e72-4461-9142-26a182429ddc
 
----
+## How can I edit this code?
 
-## 🧠 Description
+There are several ways of editing your application.
 
-**Study Spots Finder** is a web-based application that allows users to search for nearby quiet, productive places to study such as coffee shops, libraries, and study lounges. It uses the **Google Maps Places API** and **Geolocation API** to fetch and display results based on the user's current location.
+**Use Lovable**
 
-Built to help students and remote workers easily find the perfect environment for focus and productivity.
+Simply visit the [Lovable Project](https://lovable.dev/projects/b3018b99-9e72-4461-9142-26a182429ddc) and start prompting.
 
----
+Changes made via Lovable will be committed automatically to this repo.
 
-## 🚀 Live Demo
+**Use your preferred IDE**
 
-Try it here: [https://your-deployment-link.vercel.app](https://your-deployment-link.vercel.app)
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
----
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-## 🔑 Features
+Follow these steps:
 
-- 📍 **Location-Based Search** – Uses browser geolocation to find nearby study spots.
-- 🗺️ **Interactive Google Map** – View locations and click pins for more details.
-- 📚 **Place Types** – Filter results by place type (e.g., cafés, libraries, coworking spaces).
-- 💡 **User-Friendly UI** – Clean, responsive design built for mobile and desktop.
-- 🖍️ **Custom Markers and Info Windows** – Quick-glance details like address, rating, hours.
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
----
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-## 🛠 Technologies Used
+# Step 3: Install the necessary dependencies.
+npm i
 
-- **HTML5 & CSS3** – Page structure and responsive styling.
-- **JavaScript (ES6+)** – App logic, fetch, and event handling.
-- **Google Maps JavaScript API** – Embeds interactive map.
-- **Google Places API** – Fetches nearby places.
-- **Geolocation API** – Detects user's current position.
-- **Deployment** – Vercel or Netlify.
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
+```
 
----
+**Edit a file directly in GitHub**
 
-## 📚 Resources & Credits
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-- [Google Maps Platform](https://developers.google.com/maps)
-- [Geolocation API Docs](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
-- [FontAwesome](https://fontawesome.com/) – For UI icons
+**Use GitHub Codespaces**
 
----
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## 💭 Future Improvements
+## What technologies are used for this project?
 
-- [ ] Add user reviews and custom ratings
-- [ ] Allow users to submit their favorite study spots
-- [ ] Implement filters (Wi-Fi quality, noise level, hours)
-- [ ] Add dark mode toggle
+This project is built with:
 
----
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-## 👤 Author
+## How can I deploy this project?
 
-**Your Name** – [your-github-link](https://github.com/yourusername)
+Simply open [Lovable](https://lovable.dev/projects/b3018b99-9e72-4461-9142-26a182429ddc) and click on Share -> Publish.
 
----
+## Can I connect a custom domain to my Lovable project?
 
-## 📄 License
+Yes it is!
 
-This project is licensed under the MIT License.
-Feel free to use, modify, and build upon it!
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)

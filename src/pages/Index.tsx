@@ -22,9 +22,11 @@ const Index = () => {
          <div className="absolute inset-0 opacity-5 bg-[url('/path/to/star-pattern.svg')] bg-repeat"></div>
          <div className="container mx-auto px-4 relative z-10">
            <div className="max-w-3xl mx-auto text-center">
-             <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-tight">
-               Find Your <span className="gradient-text">Space</span>
-             </h1>
+           <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-tight">
+  Find Your <span className="gradient-text">Space</span>
+  <span className="ml-3 animate-bounce inline-block">🌟</span>
+</h1>
+
              <p className="text-lg md:text-xl mb-10 text-space-subtle-text max-w-xl mx-auto">
                Discover and share the best student-recommended places to focus and learn near campus.
              </p>

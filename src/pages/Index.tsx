@@ -19,6 +19,14 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-space-dark via-indigo-950 to-space-medium text-space-text py-24 md:py-32">
          {/* Subtle background pattern (optional) */}
+         <span className="shooting-star" style={{ top: '-40px', left: '-100px', animationDelay: '0s' }} />
+         <span className="shooting-star" style={{ top: '-80px', left: '-150px', animationDelay: '1s' }} />
+         <span className="shooting-star" style={{ top: '-120px', left: '-200px', animationDelay: '2s' }} />
+         <span className="shooting-star" style={{ top: '-160px', left: '-250px', animationDelay: '3s' }} />
+         <span className="shooting-star" style={{ top: '-200px', left: '-300px', animationDelay: '4s' }} />
+
+
+
          <div className="absolute inset-0 opacity-5 bg-[url('/path/to/star-pattern.svg')] bg-repeat"></div>
          <div className="container mx-auto px-4 relative z-10">
            <div className="max-w-3xl mx-auto text-center">

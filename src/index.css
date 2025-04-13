@@ -109,3 +109,26 @@
     @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }
 }
+
+/* === Shooting Star Effect === */
+
+@keyframes shootingStar {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(600px, 200px) scale(0.5); /* steeper diagonal */
+    opacity: 0;
+  }
+}
+
+.shooting-star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 20px 8px white;
+  animation: shootingStar 2s ease-out infinite;
+}

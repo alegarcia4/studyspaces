@@ -1,9 +1,13 @@
 
-import { useState } from "react";
-import { Search, Clock, MapPin, Wifi } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Clock, MapPin, Wifi, Star, Coffee, Power, Volume2, CalendarClock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 interface SearchFiltersProps {
   onFilter: (filters: FilterOptions) => void;
@@ -13,18 +17,27 @@ export interface FilterOptions {
   search: string;
   distance: number;
   openNow: boolean;
+  minRating: number;
   amenities: string[];
 }
 
 const SearchFilters = ({ onFilter }: SearchFiltersProps) => {
+  const { toast } = useToast();
   const [filters, setFilters] = useState<FilterOptions>({
     search: "",
     distance: 5,
     openNow: false,
+    minRating: 0,
     amenities: [],
   });
 
-  const amenitiesList = ["Free WiFi", "Power Outlets", "Quiet Zone", "24/7 Access", "Food & Drinks"];
+  const amenitiesList = [
+    { label: "Free WiFi", icon: <Wifi className="h-3 w-3" /> },
+    { label: "Power Outlets", icon: <Power className="h-3 w-3" /> },
+    { label: "Quiet Zone", icon: <Volume2 className="h-3 w-3" /> },
+    { label: "24/7 Access", icon: <CalendarClock className="h-3 w-3" /> },
+    { label: "Food & Drinks", icon: <Coffee className="h-3 w-3" /> },
+  ];
 
   const handleAmenityToggle = (amenity: string) => {
     setFilters(prev => {
@@ -47,13 +60,42 @@ const SearchFilters = ({ onFilter }: SearchFiltersProps) => {
     setFilters(prev => ({ ...prev, distance: value[0] }));
   };
 
+  const handleRatingChange = (value: number[]) => {
+    setFilters(prev => ({ ...prev, minRating: value[0] }));
+  };
+
   const handleOpenNowToggle = () => {
     setFilters(prev => ({ ...prev, openNow: !prev.openNow }));
   };
 
   const applyFilters = () => {
     onFilter(filters);
+    toast({
+      title: "Filters Applied",
+      description: `Showing spots within ${filters.distance} miles${filters.openNow ? ' that are open now' : ''}`,
+    });
   };
+
+  const clearFilters = () => {
+    const resetFilters = {
+      search: "",
+      distance: 5,
+      openNow: false,
+      minRating: 0,
+      amenities: [],
+    };
+    setFilters(resetFilters);
+    onFilter(resetFilters);
+    toast({
+      title: "Filters Cleared",
+      description: "Showing all study spots",
+    });
+  };
+
+  // Auto-apply filters when component mounts
+  useEffect(() => {
+    applyFilters();
+  }, []);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-5">
@@ -86,14 +128,36 @@ const SearchFilters = ({ onFilter }: SearchFiltersProps) => {
       </div>
       
       <div className="mb-4">
-        <Button
-          variant={filters.openNow ? "default" : "outline"}
-          className={`w-full flex items-center gap-2 ${filters.openNow ? 'bg-studyspot-purple hover:bg-studyspot-light-purple' : ''}`}
-          onClick={handleOpenNowToggle}
-        >
-          <Clock className="h-4 w-4" />
-          Open Now
-        </Button>
+        <div className="flex justify-between items-center mb-2">
+          <label className="text-sm font-medium flex items-center gap-2">
+            <Star className="h-4 w-4 text-studyspot-purple" />
+            Minimum Rating
+          </label>
+          <span className="text-sm text-studyspot-neutral">{filters.minRating.toFixed(1)}+</span>
+        </div>
+        <Slider
+          defaultValue={[0]}
+          min={0}
+          max={5}
+          step={0.5}
+          value={[filters.minRating]}
+          onValueChange={handleRatingChange}
+          className="my-2"
+        />
+      </div>
+      
+      <div className="mb-4">
+        <div className="flex items-center space-x-2">
+          <Switch 
+            id="open-now" 
+            checked={filters.openNow} 
+            onCheckedChange={handleOpenNowToggle}
+          />
+          <Label htmlFor="open-now" className="flex items-center gap-2">
+            <Clock className="h-4 w-4 text-studyspot-purple" />
+            Open Now
+          </Label>
+        </div>
       </div>
       
       <div className="mb-4">
@@ -103,25 +167,38 @@ const SearchFilters = ({ onFilter }: SearchFiltersProps) => {
         </h3>
         <div className="flex flex-wrap gap-2">
           {amenitiesList.map(amenity => (
-            <Button
-              key={amenity}
-              variant={filters.amenities.includes(amenity) ? "default" : "outline"}
-              size="sm"
-              className={filters.amenities.includes(amenity) ? 'bg-studyspot-purple hover:bg-studyspot-light-purple' : ''}
-              onClick={() => handleAmenityToggle(amenity)}
+            <Badge
+              key={amenity.label}
+              variant={filters.amenities.includes(amenity.label) ? "default" : "outline"}
+              className={`cursor-pointer flex items-center gap-1 ${
+                filters.amenities.includes(amenity.label) 
+                  ? 'bg-studyspot-purple hover:bg-studyspot-light-purple' 
+                  : 'hover:bg-studyspot-soft-purple hover:text-studyspot-purple'
+              }`}
+              onClick={() => handleAmenityToggle(amenity.label)}
             >
-              {amenity}
-            </Button>
+              {amenity.icon}
+              {amenity.label}
+            </Badge>
           ))}
         </div>
       </div>
       
-      <Button 
-        onClick={applyFilters}
-        className="w-full bg-studyspot-purple hover:bg-studyspot-light-purple"
-      >
-        Apply Filters
-      </Button>
+      <div className="flex gap-2">
+        <Button 
+          onClick={applyFilters}
+          className="flex-1 bg-studyspot-purple hover:bg-studyspot-light-purple"
+        >
+          Apply Filters
+        </Button>
+        <Button 
+          onClick={clearFilters}
+          variant="outline"
+          className="w-10"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </Button>
+      </div>
     </div>
   );
 };

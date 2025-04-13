@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { StudySpot } from "@/data/studySpots";
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 
 // Define the map container style
@@ -29,9 +29,9 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
   const [selectedSpot, setSelectedSpot] = useState<StudySpot | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   
-  // Load the Google Maps script
+  // Load the Google Maps script with the environment variable
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "YOUR_API_KEY", // Replace with your actual API key
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
     libraries: ["places"],
   });
 

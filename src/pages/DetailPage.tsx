@@ -4,15 +4,18 @@ import { useParams, Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { StudySpot, studySpots } from "@/data/studySpots";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, Star, Wifi, Coffee, ChevronLeft } from "lucide-react";
+import { Clock, MapPin, Star, Wifi, Coffee, ChevronLeft, Navigation } from "lucide-react";
 import StarRating from "@/components/StarRating";
 import ReviewCard from "@/components/ReviewCard";
+import { useToast } from "@/hooks/use-toast";
+import Map from "@/components/Maps";
 
 const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [spot, setSpot] = useState<StudySpot | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Simulate loading
@@ -24,6 +27,22 @@ const DetailPage = () => {
     
     return () => clearTimeout(timer);
   }, [id]);
+
+  const handleGetDirections = () => {
+    if (!spot) return;
+    
+    // Google Maps URL format for directions
+    const destinationParam = encodeURIComponent(spot.address);
+    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${destinationParam}`;
+    
+    // Open in new tab
+    window.open(googleMapsUrl, '_blank');
+    
+    toast({
+      title: "Opening directions",
+      description: `Getting directions to ${spot.name}`,
+    });
+  };
 
   if (isLoading) {
     return (
@@ -140,15 +159,22 @@ const DetailPage = () => {
               
               <div className="md:w-1/3 border rounded-lg p-4 bg-gray-50 h-fit">
                 <h3 className="font-medium mb-2">Location</h3>
-                <div className="aspect-video bg-gray-200 rounded-md mb-4 flex items-center justify-center">
-                  <MapPin className="h-6 w-6 text-studyspot-neutral" />
-                  <span className="text-sm text-studyspot-neutral ml-2">Map View</span>
+                <div className="aspect-video rounded-md mb-4 overflow-hidden">
+                  <div className="h-full w-full">
+                    <Map />
+                  </div>
                 </div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm">Distance</span>
                   <span className="font-medium">{spot.distance}</span>
                 </div>
-                <Button className="w-full bg-studyspot-purple hover:bg-studyspot-light-purple">Get Directions</Button>
+                <Button 
+                  className="w-full bg-studyspot-purple hover:bg-studyspot-light-purple flex items-center gap-2 justify-center"
+                  onClick={handleGetDirections}
+                >
+                  <Navigation className="h-4 w-4" />
+                  Get Directions
+                </Button>
               </div>
             </div>
             

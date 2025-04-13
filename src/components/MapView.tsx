@@ -19,7 +19,6 @@ const options = {
   zoomControl: true,
 };
 
-
 interface MapViewProps {
   spots: StudySpot[];
   userLocation: { lat: number; lng: number } | null;
@@ -36,7 +35,7 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
     libraries: ["places"],
   });
 
-  // Calculate map center based on spots or user location
+  // Calculate map center based on spots or user location or default to CSUF
   const getMapCenter = useCallback(() => {
     if (userLocation) {
       return { lat: userLocation.lat, lng: userLocation.lng };
@@ -66,7 +65,7 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
     }
     
     // Default to a central point if no user location
-    return { lat: 33.8826, lng: -117.8851 };
+    return { lat: 34.052235, lng: -118.243683 }; // Los Angeles coordinates
   }, [spots, userLocation]);
 
   const mapCenter = getMapCenter();
@@ -147,7 +146,7 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           center={mapCenter}
-          zoom={12}
+          zoom={13}
           options={options}
           onLoad={onMapLoad}
         >
@@ -163,26 +162,35 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
                 strokeColor: "#FFFFFF",
                 strokeWeight: 2,
               }}
+              title="Your Location"
             />
           )}
           
+          {/* Cal State Fullerton marker */}
+          <Marker
+            position={csufCoordinates}
+            icon={{
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 9,
+              fillColor: "#FFA500", // Orange for CSUF
+              fillOpacity: 0.8,
+              strokeColor: "#FFFFFF",
+              strokeWeight: 2,
+            }}
+            title="Cal State Fullerton"
+          />
+          
           {/* Study spot markers */}
           {spots.map((spot) => {
-            // Extract coordinates from address string
-            const [latStr, lngStr] = spot.address.split(',');
-            const lat = parseFloat(latStr);
-            const lng = parseFloat(lngStr);
-            
-            // Skip invalid coordinates
-            if (isNaN(lat) || isNaN(lng)) {
-              console.warn(`Invalid coordinates for spot: ${spot.name}`);
+            if (!spot.coordinates) {
+              console.warn(`No coordinates for spot: ${spot.name}`);
               return null;
             }
             
             return (
               <Marker
                 key={spot.id}
-                position={{ lat, lng }}
+                position={spot.coordinates}
                 onClick={() => handleSpotClick(spot)}
                 icon={{
                   path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
@@ -192,6 +200,7 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
                   strokeColor: "#FFFFFF",
                   strokeWeight: 1,
                 }}
+                title={spot.name}
               />
             );
           })}
@@ -199,10 +208,7 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
           {/* Info window for selected spot */}
           {selectedSpot && (
             <InfoWindow
-              position={{ 
-                lat: parseFloat(selectedSpot.address.split(',')[0]), 
-                lng: parseFloat(selectedSpot.address.split(',')[1]) 
-              }}
+              position={selectedSpot.coordinates}
               onCloseClick={() => setSelectedSpot(null)}
             >
               <div className="p-2">

@@ -22,7 +22,6 @@ const options = {
     streetViewControl: false,
     mapTypeControl: false,
     fullscreenControl: false,
-    styles: mapStyleDark, // Apply the dark style
     gestureHandling: "cooperative", // Better for touch devices
 };
 

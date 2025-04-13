@@ -61,7 +61,7 @@ const Index = () => {
                  <Clock className="h-7 w-7" />
                </div>
                <h3 className="text-xl font-semibold mb-3 text-foreground">Hours & Availability</h3>
-               <p className="text-muted-foreground text-sm">Filter for spots open late or 24/7, perfect for those all-nighters.</p>
+               <p className="text-muted-foreground text-sm">Filter for spaces open late or 24/7, perfect for those all-nighters.</p>
              </div>
 
              <div className="flex flex-col items-center text-center">
@@ -115,7 +115,7 @@ const Index = () => {
               <span className="font-semibold text-foreground">StudySpace</span>
             </div>
             <div className="text-xs text-muted-foreground text-center md:text-right">
-               © {new Date().getFullYear()} StudySpace | A Demo Project
+               © {new Date().getFullYear()} StudySpace | FullyHacks 2025
             </div>
           </div>
         </div>

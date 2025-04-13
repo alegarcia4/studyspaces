@@ -220,7 +220,7 @@ const DetailPage = () => {
                   <span>{spot.hours}</span>
                 </div>
                  <div className="mb-6 prose prose-sm dark:prose-invert max-w-none">
-                  <h3 className="text-lg font-medium mb-2 text-foreground">About this spot</h3>
+                  <h3 className="text-lg font-medium mb-2 text-foreground">About this space</h3>
                   <p>{spot.description}</p> {/* Removed text-foreground/90 */}
                 </div>
                  <div>

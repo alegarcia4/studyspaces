@@ -102,7 +102,7 @@ const SubmitSpotPage = () => {
       variant: "default", // Use default variant for success
        action: (
          <Button variant="outline" size="sm" onClick={() => navigate('/spots')}>
-            View Spots
+            View Spaces
          </Button>
         ),
     });
@@ -136,7 +136,7 @@ const SubmitSpotPage = () => {
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Access Denied</AlertTitle>
                     <AlertDescription>
-                      You need to be signed in to submit a new study spot.
+                      You need to be signed in to submit a new study space.
                     </AlertDescription>
                  </Alert>
                  <Button onClick={() => navigate('/')} variant="link" className="mt-4">Go Home</Button> {/* Or trigger login modal */}
@@ -154,9 +154,9 @@ const SubmitSpotPage = () => {
         <div className="max-w-3xl mx-auto">
           <div className="mb-6">
             <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2 text-muted-foreground hover:text-primary">
-              <Link to="/spots"><ArrowLeft className="h-4 w-4 mr-1"/> Back to Spots</Link>
+              <Link to="/spots"><ArrowLeft className="h-4 w-4 mr-1"/> Back to Spaces</Link>
             </Button>
-            <h1 className="text-3xl font-bold mb-2 gradient-text">Add a Study Spot</h1>
+            <h1 className="text-3xl font-bold mb-2 gradient-text">Add a Study Space</h1>
             <p className="text-muted-foreground">
               Share your favorite place to study with fellow students. Fill in the details below.
             </p>
@@ -172,7 +172,7 @@ const SubmitSpotPage = () => {
                 </h2>
                 <div className="space-y-4">
                   <div className="grid gap-1.5">
-                    <Label htmlFor="name">Spot Name *</Label>
+                    <Label htmlFor="name">Space Name *</Label>
                     <Input id="name" placeholder="E.g., Stellar Cafe, Library Quiet Floor" required value={spotName} onChange={e => setSpotName(e.target.value)} />
                   </div>
                   <div className="grid gap-1.5">
@@ -268,7 +268,7 @@ const SubmitSpotPage = () => {
                   ) : (
                     <>
                       <Check className="mr-2 h-4 w-4" />
-                      Submit Study Spot
+                      Submit Study Space
                     </>
                   )}
                 </Button>

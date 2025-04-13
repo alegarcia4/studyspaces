@@ -197,8 +197,8 @@ const ListingPage = () => {
        return (
         <div className="text-center py-16 bg-card rounded-lg shadow-md border border-border mt-6 md:mt-0">
           <Sparkles className="h-12 w-12 text-primary mx-auto mb-4 animate-pulse" />
-          <p className="text-xl font-medium mb-2 text-card-foreground">No study spots found</p>
-          <p className="text-muted-foreground mb-6">Try adjusting your filters or add a new study spot!</p>
+          <p className="text-xl font-medium mb-2 text-card-foreground">No study spaces found</p>
+          <p className="text-muted-foreground mb-6">Try adjusting your filters or add a new study spaces!</p>
           <Button variant="outline" onClick={() => {
               setCurrentFilters(null); // Reset filters
               setFilteredSpots(allSpots); // Show all
@@ -243,7 +243,7 @@ const ListingPage = () => {
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <h1 className="text-3xl font-bold text-foreground">Find Study Spots</h1>
+          <h1 className="text-3xl font-bold text-foreground">Find Study Spaces</h1>
           <div className="flex items-center gap-3 w-full md:w-auto justify-end flex-wrap">
             {/* Mobile Filter Trigger */}
             <Sheet>
@@ -293,7 +293,7 @@ const ListingPage = () => {
                  </div>
                )}
                <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary" className="flex items-center gap-1 text-xs"> <MapPin className="h-3 w-3"/> {allSpots.length} Total Spots </Badge>
+                  <Badge variant="secondary" className="flex items-center gap-1 text-xs"> <MapPin className="h-3 w-3"/> {allSpots.length} Total Spaces </Badge>
                   <Badge variant="secondary" className="flex items-center gap-1 text-xs"> <Clock className="h-3 w-3"/> {allSpots.filter(spot => spot.hours?.includes("24/7") || spot.hours?.includes("midnight")).length} Open Late/24h </Badge>
                   <Badge variant="secondary" className="flex items-center gap-1 text-xs"> <Wifi className="h-3 w-3"/> {allSpots.filter(spot => spot.amenities.includes("Free WiFi")).length} With WiFi </Badge>
                </div>
@@ -304,7 +304,7 @@ const ListingPage = () => {
           <div className="md:col-span-3">
              <div className="bg-card rounded-lg shadow-md p-4 mb-6 border border-border sticky top-20 z-10"> {/* Added sticky + z-index */}
               <div className="flex justify-between items-center">
-                 <p className="text-sm text-muted-foreground"> Showing {filteredSpots.length} of {allSpots.length} spots </p>
+                 <p className="text-sm text-muted-foreground"> Showing {filteredSpots.length} of {allSpots.length} spaces </p>
                  <div className="flex gap-1 sm:gap-2">
                    <Button variant={viewMode === "grid" ? "secondary" : "ghost"} size="sm" className={` ${viewMode === "grid" ? "text-primary" : "text-muted-foreground"} hover:bg-accent hover:text-accent-foreground`} onClick={() => setViewMode("grid")}> <Grid3X3 className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Grid</span> </Button>
                    <Button variant={viewMode === "list" ? "secondary" : "ghost"} size="sm" className={` ${viewMode === "list" ? "text-primary" : "text-muted-foreground"} hover:bg-accent hover:text-accent-foreground`} onClick={() => setViewMode("list")}> <List className="h-4 w-4" /> <span className="hidden sm:inline ml-1">List</span> </Button>

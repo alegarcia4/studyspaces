@@ -33,8 +33,8 @@ export const studySpots: StudySpot[] = [
     hours: "7:00 AM - 12:00 AM (Mon-Thu), 7:00 AM - 5:00 PM (Fri), 10:00 AM - 5:00 PM (Sat), 12:00 PM - 12:00 AM (Sun)",
     distance: "0.2 miles",
     images: [
-      "https://images.unsplash.com/photo-1521017432531-fbd92d768814?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1534357808625-fdbecdd0b6da?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "/Pollak-Library.jpg",
+      "/plnstudy.jpg"
     ],
     amenities: ["Free WiFi", "Power Outlets", "Quiet Zones", "Group Study Rooms", "Computer Labs", "Restrooms"],
     rating: 4.7,
@@ -73,8 +73,8 @@ export const studySpots: StudySpot[] = [
     hours: "7:00 AM - 10:00 PM (Mon-Fri), 9:00 AM - 6:00 PM (Sat-Sun)",
     distance: "0.4 miles",
     images: [
-      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1565711561500-49678a10a63f?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "/tsu.jpg",
+      "/tsuinside.jpg"
     ],
     amenities: ["Free WiFi", "Power Outlets", "Food & Coffee", "Restrooms", "Group Study Rooms"],
     rating: 4.5,
@@ -106,8 +106,8 @@ export const studySpots: StudySpot[] = [
     hours: "6:00 AM - 12:00 AM",
     distance: "1.2 miles",
     images: [
-      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1526723038554-b4e37f2c2d85?q=80&w=2829&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "/nightowl.jpeg",
+      "/nightowlinside.jpg"
     ],
     amenities: ["Free WiFi", "Power Outlets", "Coffee & Snacks", "Quiet Environment", "Late Hours"],
     rating: 4.6,
@@ -139,8 +139,8 @@ export const studySpots: StudySpot[] = [
     hours: "7:00 AM - 10:00 PM (Mon-Fri), 9:00 AM - 5:00 PM (Sat), Closed (Sun)",
     distance: "0.3 miles",
     images: [
-      "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=2873&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1471039497385-b6d6ba609f9c?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "/mihaylohallout.jpeg",
+      "/mihaylohall.jpg"
     ],
     amenities: ["Free WiFi", "Power Outlets", "Whiteboards", "Group Tables", "Modern Facilities"],
     rating: 4.8,
@@ -172,8 +172,8 @@ export const studySpots: StudySpot[] = [
     hours: "10:00 AM - 7:00 PM (Mon-Thu), 10:00 AM - 5:00 PM (Fri-Sat), 1:00 PM - 5:00 PM (Sun)",
     distance: "2.7 miles",
     images: [
-      "https://images.unsplash.com/photo-1568667256549-094345857637?q=80&w=2615&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2590&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      "/fullertonpublic.jpg",
+      "/fullypub.jpg"
     ],
     amenities: ["Free WiFi", "Power Outlets", "Quiet Zones", "Study Rooms", "Restrooms"],
     rating: 4.6,

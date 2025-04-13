@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -20,28 +20,14 @@ const amenitiesList = [
 const SubmitSpotPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, loading: authLoading, session } = useAuth(); // Use auth hook
+  const { user, loading: authLoading } = useAuth(); // Use auth hook
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [spotName, setSpotName] = useState('');
   const [address, setAddress] = useState('');
   const [hours, setHours] = useState('');
   const [description, setDescription] = useState('');
-  // Add state for photos later if needed
-  // const [photos, setPhotos] = useState<File[]>([]);
-
-  useEffect(() => {
-    // Redirect if not logged in after loading check
-    if (!authLoading && !user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please sign in to submit a study spot.",
-        variant: "destructive",
-      });
-      navigate('/'); // Redirect to home page
-    }
-  }, [user, authLoading, navigate, toast]);
-
+  
   const toggleAmenity = (amenity: string) => {
     setSelectedAmenities(prev =>
       prev.includes(amenity)
@@ -52,54 +38,24 @@ const SubmitSpotPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) {
-        toast({ title: "Not signed in", description: "You must be signed in to submit.", variant: "destructive"});
-        return;
-    }
     setIsSubmitting(true);
 
-    // TODO: Replace with actual Supabase insert logic
     console.log("Submitting new spot:", {
         name: spotName,
         address: address,
         hours: hours,
         description: description,
         amenities: selectedAmenities,
-        submitted_by: user.id, // Use the user's ID
-        // Add coordinates field if you derive it from address via Geocoding API
-        // Add photo URLs if handling uploads
+        submitted_by: user?.id || "anonymous", // Use the user's ID or fallback to "anonymous"
     });
 
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // --- Start: Example of how you *might* add to local data (for testing without DB) ---
-    // This part should be REMOVED when using a real database.
-    // const newSpot = {
-    //   id: crypto.randomUUID(),
-    //   name: spotName,
-    //   address: address,
-    //   coordinates: { lat: 33.88 + (Math.random() - 0.5) * 0.05, lng: -117.88 + (Math.random() - 0.5) * 0.05 }, // Random near CSUF
-    //   description: description,
-    //   hours: hours,
-    //   distance: 'Just added', // Placeholder
-    //   images: ['https://via.placeholder.com/400x300.png?text=New+Spot'], // Placeholder
-    //   amenities: selectedAmenities,
-    //   rating: 0, // Starts with no rating
-    //   reviews: [],
-    //   submittedBy: user.email?.split('@')[0] || 'User',
-    //   submittedDate: new Date().toISOString(),
-    // };
-    // import { studySpots } from "@/data/studySpots"; // Need to import if modifying static data
-    // studySpots.push(newSpot);
-    // --- End: Example local data addition ---
-
 
     setIsSubmitting(false);
     toast({
       title: "Study Spot Submitted!",
       description: "Thanks for helping the community find great places to study.",
-      variant: "default", // Use default variant for success
+      variant: "default",
        action: (
          <Button variant="outline" size="sm" onClick={() => navigate('/spots')}>
             View Spaces
@@ -107,13 +63,9 @@ const SubmitSpotPage = () => {
         ),
     });
 
-    // Reset form or navigate away
-    // setSpotName(''); setAddress(''); setHours(''); setDescription(''); setSelectedAmenities([]);
     navigate("/spots"); // Redirect to listing page after successful submission
-
   };
 
-  // Render loading state while checking auth
   if (authLoading) {
     return (
        <div className="min-h-screen flex flex-col bg-background">
@@ -125,26 +77,6 @@ const SubmitSpotPage = () => {
        </div>
     );
   }
-
-  // Although useEffect redirects, this check prevents rendering the form momentarily if logged out
-  if (!user) {
-      return (
-         <div className="min-h-screen flex flex-col bg-background">
-            <Navbar />
-             <div className="flex-1 container mx-auto px-4 py-16 text-center">
-                 <Alert variant="destructive" className="max-w-md mx-auto">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Access Denied</AlertTitle>
-                    <AlertDescription>
-                      You need to be signed in to submit a new study space.
-                    </AlertDescription>
-                 </Alert>
-                 <Button onClick={() => navigate('/')} variant="link" className="mt-4">Go Home</Button> {/* Or trigger login modal */}
-             </div>
-         </div>
-      );
-  }
-
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">

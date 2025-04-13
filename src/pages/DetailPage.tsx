@@ -255,34 +255,51 @@ const DetailPage = () => {
                    <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-foreground">
                        <Edit3 className="h-5 w-5 text-primary"/> Leave a Review
                    </h3>
-                   {user ? (
-                       <form onSubmit={handleReviewSubmit} className="space-y-4">
-                            <div>
-                                <Label htmlFor="rating" className="mb-2 block text-sm font-medium text-foreground">Rating</Label>
-                                <div className="flex">
-                                 {[1, 2, 3, 4, 5].map((star) => (
-                                     <button type="button" key={star} onClick={() => setNewReview({ ...newReview, rating: star })} className="p-1 focus:outline-none focus:ring-2 focus:ring-ring rounded" aria-label={`Rate ${star} out of 5 stars`}>
-                                         <Star className={`h-5 w-5 transition-colors ${ star <= newReview.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground hover:text-foreground/80' }`} />
-                                     </button>
-                                 ))}
-                                 </div>
-                            </div>
-                            <div>
-                                 <Label htmlFor="comment" className="mb-2 block text-sm font-medium text-foreground">Comment</Label>
-                                 <Textarea id="comment" placeholder={`Share your experience at ${spot.name}...`} value={newReview.comment} onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })} className="min-h-[80px] bg-background" required />
-                            </div>
-                            <div className="flex justify-end">
-                                <Button type="submit" disabled={isSubmittingReview} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                                     {isSubmittingReview ? "Submitting..." : "Submit Review"}
-                                </Button>
-                            </div>
-                              <p className="text-xs text-muted-foreground text-center mt-2">Note: Reviews submitted here are for demonstration and are not saved permanently.</p>
-                       </form>
-                   ) : (
-                       <div className="text-center py-4 border border-dashed rounded-md border-border">
-                           <p className="text-sm text-muted-foreground mb-3">You must be signed in to leave a review.</p>
+                   <form onSubmit={handleReviewSubmit} className="space-y-4">
+                     <div>
+                       <Label htmlFor="rating" className="mb-2 block text-sm font-medium text-foreground">Rating</Label>
+                       <div className="flex">
+                         {[1, 2, 3, 4, 5].map((star) => (
+                           <button
+                             type="button"
+                             key={star}
+                             onClick={() => setNewReview({ ...newReview, rating: star })}
+                             className="p-1 focus:outline-none focus:ring-2 focus:ring-ring rounded"
+                             aria-label={`Rate ${star} out of 5 stars`}
+                           >
+                             <Star className={`h-5 w-5 transition-colors ${
+                               star <= newReview.rating
+                                 ? 'fill-yellow-400 text-yellow-400'
+                                 : 'text-muted-foreground hover:text-foreground/80'
+                             }`} />
+                           </button>
+                         ))}
                        </div>
-                   )}
+                     </div>
+                     <div>
+                       <Label htmlFor="comment" className="mb-2 block text-sm font-medium text-foreground">Comment</Label>
+                       <Textarea
+                         id="comment"
+                         placeholder={`Share your experience at ${spot.name}...`}
+                         value={newReview.comment}
+                         onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                         className="min-h-[80px] bg-background"
+                         required
+                       />
+                     </div>
+                     <div className="flex justify-end">
+                       <Button
+                         type="submit"
+                         disabled={isSubmittingReview}
+                         className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                       >
+                         {isSubmittingReview ? "Submitting..." : "Submit Review"}
+                       </Button>
+                     </div>
+                     <p className="text-xs text-muted-foreground text-center mt-2">
+                       Note: Reviews submitted here are for demonstration and are not saved permanently.
+                     </p>
+                   </form>
                </div>
                {/* Display Reviews */}
                {spot.reviews.length === 0 ? (

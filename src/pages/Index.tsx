@@ -23,7 +23,7 @@ const Index = () => {
          <div className="container mx-auto px-4 relative z-10">
            <div className="max-w-3xl mx-auto text-center">
              <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-tight">
-               Find Your Perfect <span className="gradient-text">Study Space</span>
+               Find Your <span className="gradient-text">Space</span>
              </h1>
              <p className="text-lg md:text-xl mb-10 text-space-subtle-text max-w-xl mx-auto">
                Discover and share the best student-recommended places to focus and learn near campus.
@@ -81,7 +81,7 @@ const Index = () => {
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-3xl font-bold text-foreground">Top Rated Spaces</h2>
             <Button asChild variant="link" className="text-primary text-sm">
-              <Link to="/spots">View All Spots <ArrowRight className="ml-1 h-4 w-4"/></Link>
+              <Link to="/spots">View All Spaces <ArrowRight className="ml-1 h-4 w-4"/></Link>
             </Button>
           </div>
 
@@ -101,7 +101,7 @@ const Index = () => {
              Help fellow students by sharing your favorite study locations. Add details like amenities, hours, and photos!
            </p>
           <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-base">
-            <Link to="/submit">Add Your Spot</Link>
+            <Link to="/submit">Add Your Space</Link>
           </Button>
         </div>
       </section>

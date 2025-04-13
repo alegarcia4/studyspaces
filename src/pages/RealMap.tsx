@@ -57,7 +57,7 @@ const MapView = () => {
                 onClick={() => navigate('/spots')}
               >
                 <Compass className="h-4 w-4" />
-                Find Spots
+                Find Spaces
               </Button>
             </div>
           </div>
@@ -67,10 +67,10 @@ const MapView = () => {
               <div className="flex items-center justify-between">
                 <h2 className="font-medium flex items-center gap-2">
                   <MapPin className="h-5 w-5 text-studyspot-purple" />
-                  Cal State Fullerton Study Spots
+                  Cal State Fullerton Study Spaces
                 </h2>
                 <span className="text-xs text-studyspot-neutral">
-                  Click on spots for more info
+                  Click on spaces for more info
                 </span>
               </div>
             </div>

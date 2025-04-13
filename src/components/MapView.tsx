@@ -1,9 +1,23 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { StudySpot } from "@/data/studySpots";
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { GoogleMap, useLoadScript, Marker, InfoWindow } from "@react-google-maps/api";
+
+// Define the map container style
+const mapContainerStyle = {
+  width: "100%",
+  height: "100%",
+  minHeight: "400px",
+};
+
+// Define map UI options
+const options = {
+  disableDefaultUI: false,
+  zoomControl: true,
+};
 
 interface MapViewProps {
   spots: StudySpot[];
@@ -12,36 +26,113 @@ interface MapViewProps {
 
 const MapView = ({ spots, userLocation }: MapViewProps) => {
   const { toast } = useToast();
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const [selectedSpot, setSelectedSpot] = useState<StudySpot | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
   
-  // Simulate map loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMapLoaded(true);
-    }, 1000);
-    
-    return () => clearTimeout(timer);
-  }, []);
+  // Load the Google Maps script
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: "YOUR_API_KEY", // Replace with your actual API key
+    libraries: ["places"],
+  });
 
   // Calculate map center based on spots or user location
-  const getMapCenter = () => {
+  const getMapCenter = useCallback(() => {
     if (userLocation) {
       return { lat: userLocation.lat, lng: userLocation.lng };
     }
     
+    // If we have spots with valid coordinates, use average of spots
+    const validSpots = spots.filter(spot => {
+      const [lat, lng] = spot.address.split(',').map(coord => parseFloat(coord.trim()));
+      return !isNaN(lat) && !isNaN(lng);
+    });
+    
+    if (validSpots.length > 0) {
+      const latSum = validSpots.reduce((sum, spot) => {
+        const lat = parseFloat(spot.address.split(',')[0].trim());
+        return sum + lat;
+      }, 0);
+      
+      const lngSum = validSpots.reduce((sum, spot) => {
+        const lng = parseFloat(spot.address.split(',')[1].trim());
+        return sum + lng;
+      }, 0);
+      
+      return {
+        lat: latSum / validSpots.length,
+        lng: lngSum / validSpots.length
+      };
+    }
+    
     // Default to a central point if no user location
     return { lat: 34.052235, lng: -118.243683 }; // Los Angeles coordinates
-  };
+  }, [spots, userLocation]);
 
   const mapCenter = getMapCenter();
+  
+  // Save map instance when it loads
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
+  }, []);
 
+  // Handle spot click
   const handleSpotClick = (spot: StudySpot) => {
+    setSelectedSpot(spot);
     toast({
       title: spot.name,
       description: `${spot.distance} away - ${spot.hours}`,
     });
   };
+
+  // Handle zoom in
+  const handleZoomIn = () => {
+    if (mapRef.current) {
+      mapRef.current.setZoom((mapRef.current.getZoom() || 10) + 1);
+    }
+  };
+
+  // Handle zoom out
+  const handleZoomOut = () => {
+    if (mapRef.current) {
+      mapRef.current.setZoom((mapRef.current.getZoom() || 10) - 1);
+    }
+  };
   
+  // Show loading state
+  if (loadError) {
+    return (
+      <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col">
+        <div className="p-4 border-b">
+          <h3 className="font-medium">Map View</h3>
+          <p className="text-xs text-studyspot-neutral mt-1">
+            Error loading maps
+          </p>
+        </div>
+        <div className="flex-1 relative bg-gray-100 min-h-[400px] flex items-center justify-center">
+          <p>Error loading Google Maps. Please check your internet connection.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col">
+        <div className="p-4 border-b">
+          <h3 className="font-medium">Map View</h3>
+          <p className="text-xs text-studyspot-neutral mt-1">
+            Loading map...
+          </p>
+        </div>
+        <div className="flex-1 relative bg-gray-100 min-h-[400px]">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="animate-spin h-8 w-8 border-4 border-studyspot-purple border-t-transparent rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col">
       <div className="p-4 border-b">
@@ -52,75 +143,85 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
       </div>
       
       <div className="flex-1 relative bg-gray-100 min-h-[400px]">
-        {!mapLoaded ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="animate-spin h-8 w-8 border-4 border-studyspot-purple border-t-transparent rounded-full"></div>
-          </div>
-        ) : (
-          <div className="absolute inset-0 bg-[#e8e8e8]">
-            {/* This would be replaced with an actual map library like Google Maps, Mapbox, or Leaflet */}
-            <div className="relative h-full w-full overflow-hidden">
-              {/* Simulated map background */}
-              <div className="absolute inset-0">
-                {/* Map grid lines */}
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <div key={`h-${i}`} className="absolute left-0 right-0 border-t border-gray-300" 
-                       style={{ top: `${i * 10}%` }} />
-                ))}
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <div key={`v-${i}`} className="absolute top-0 bottom-0 border-l border-gray-300" 
-                       style={{ left: `${i * 10}%` }} />
-                ))}
-              </div>
-              
-              {/* Map center indicator (user location) */}
-              {userLocation && (
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                  <div className="bg-blue-500 h-4 w-4 rounded-full animate-pulse border-2 border-white" />
-                </div>
-              )}
-              
-              {/* Study spot markers */}
-              {spots.map((spot) => {
-                // Generate pseudo-random positions for demo
-                const spotId = parseInt(spot.id.replace(/\D/g, '')) || 0;
-                const offsetX = ((spotId * 13) % 70) - 35;
-                const offsetY = ((spotId * 17) % 70) - 35;
-                
-                return (
-                  <button
-                    key={spot.id}
-                    onClick={() => handleSpotClick(spot)}
-                    className="absolute transform -translate-x-1/2 -translate-y-1/2 z-20 group"
-                    style={{ 
-                      left: `calc(50% + ${offsetX}px)`, 
-                      top: `calc(50% + ${offsetY}px)`
-                    }}
-                  >
-                    <div className="flex flex-col items-center">
-                      <div className="bg-studyspot-purple text-white p-1 rounded-full">
-                        <MapPin className="h-5 w-5" />
-                      </div>
-                      <div className="bg-white shadow-md rounded px-2 py-1 mt-1 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        {spot.name}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+        <GoogleMap
+          mapContainerStyle={mapContainerStyle}
+          center={mapCenter}
+          zoom={12}
+          options={options}
+          onLoad={onMapLoad}
+        >
+          {/* User location marker */}
+          {userLocation && (
+            <Marker
+              position={{ lat: userLocation.lat, lng: userLocation.lng }}
+              icon={{
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 7,
+                fillColor: "#4285F4",
+                fillOpacity: 1,
+                strokeColor: "#FFFFFF",
+                strokeWeight: 2,
+              }}
+            />
+          )}
+          
+          {/* Study spot markers */}
+          {spots.map((spot) => {
+            // Extract coordinates from address string
+            const [latStr, lngStr] = spot.address.split(',');
+            const lat = parseFloat(latStr);
+            const lng = parseFloat(lngStr);
             
-            {/* Map controls */}
-            <div className="absolute right-4 bottom-4 flex flex-col gap-2">
-              <Button size="icon" variant="secondary" className="bg-white shadow-md h-8 w-8">
-                <span className="text-lg font-medium">+</span>
-              </Button>
-              <Button size="icon" variant="secondary" className="bg-white shadow-md h-8 w-8">
-                <span className="text-lg font-medium">−</span>
-              </Button>
-            </div>
-          </div>
-        )}
+            // Skip invalid coordinates
+            if (isNaN(lat) || isNaN(lng)) {
+              console.warn(`Invalid coordinates for spot: ${spot.name}`);
+              return null;
+            }
+            
+            return (
+              <Marker
+                key={spot.id}
+                position={{ lat, lng }}
+                onClick={() => handleSpotClick(spot)}
+                icon={{
+                  path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                  scale: 6,
+                  fillColor: "#9759f5", // studyspot-purple
+                  fillOpacity: 1,
+                  strokeColor: "#FFFFFF",
+                  strokeWeight: 1,
+                }}
+              />
+            );
+          })}
+          
+          {/* Info window for selected spot */}
+          {selectedSpot && (
+            <InfoWindow
+              position={{ 
+                lat: parseFloat(selectedSpot.address.split(',')[0]), 
+                lng: parseFloat(selectedSpot.address.split(',')[1]) 
+              }}
+              onCloseClick={() => setSelectedSpot(null)}
+            >
+              <div className="p-2">
+                <h3 className="font-semibold">{selectedSpot.name}</h3>
+                <p className="text-xs">{selectedSpot.distance} away</p>
+                <p className="text-xs">{selectedSpot.hours}</p>
+              </div>
+            </InfoWindow>
+          )}
+        </GoogleMap>
+        
+        {/* Map controls */}
+        <div className="absolute right-4 bottom-4 flex flex-col gap-2">
+          <Button size="icon" variant="secondary" className="bg-white shadow-md h-8 w-8" onClick={handleZoomIn}>
+            <span className="text-lg font-medium">+</span>
+          </Button>
+          <Button size="icon" variant="secondary" className="bg-white shadow-md h-8 w-8" onClick={handleZoomOut}>
+            <span className="text-lg font-medium">−</span>
+          </Button>
+        </div>
       </div>
     </div>
   );

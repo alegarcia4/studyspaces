@@ -9,7 +9,7 @@ import ReviewCard from "@/components/ReviewCard";
 import { useToast } from "@/hooks/use-toast";
 import Map from "@/components/Maps";
 
-const DetailPage = () => {
+const DetailPage = () => { // idk
   const { id } = useParams<{ id: string }>();
   const [spot, setSpot] = useState<StudySpot | null>(null);
   const [isLoading, setIsLoading] = useState(true);

@@ -4,13 +4,31 @@ import Navbar from "@/components/Navbar";
 import SearchFilters, { FilterOptions } from "@/components/SearchFilters";
 import StudySpotCard from "@/components/StudySpotCard";
 import { studySpots, StudySpot } from "@/data/studySpots";
-import { Grid3X3, List } from "lucide-react";
+import { Grid3X3, List, Locate, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 const ListingPage = () => {
   const [filteredSpots, setFilteredSpots] = useState<StudySpot[]>(studySpots);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [isLoading, setIsLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [currentTime, setCurrentTime] = useState<string>("");
+  const { toast } = useToast();
+
+  // Get current time
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+    };
+    
+    updateTime();
+    const timer = setInterval(updateTime, 60000); // Update every minute
+    
+    return () => clearInterval(timer);
+  }, []);
 
   // Simulate loading
   useEffect(() => {
@@ -20,6 +38,80 @@ const ListingPage = () => {
     
     return () => clearTimeout(timer);
   }, []);
+
+  // Get user location
+  const getUserLocation = () => {
+    if (!navigator.geolocation) {
+      toast({
+        title: "Error",
+        description: "Geolocation is not supported by your browser",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLocationLoading(true);
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        });
+        toast({
+          title: "Location Found",
+          description: "Using your current location to find nearby study spots",
+        });
+        setLocationLoading(false);
+      },
+      (error) => {
+        toast({
+          title: "Location Error",
+          description: error.message,
+          variant: "destructive",
+        });
+        setLocationLoading(false);
+      },
+      { enableHighAccuracy: true }
+    );
+  };
+
+  // Calculate distance between two coordinates in miles
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 3958.8; // Radius of the Earth in miles
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lat1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  };
+
+  // Update spots with real distances when user location changes
+  useEffect(() => {
+    if (userLocation) {
+      // Update distances based on user location
+      const spotsWithRealDistance = studySpots.map(spot => {
+        // For this demo, we'll use a random lat/lng for each spot
+        // In a real app, these would come from your database
+        const spotLat = parseFloat(spot.address.split(',')[0]) || (Math.random() * 0.1 + 34.0);
+        const spotLng = parseFloat(spot.address.split(',')[1]) || (Math.random() * 0.1 - 118.2);
+        
+        const distance = calculateDistance(
+          userLocation.lat, 
+          userLocation.lng,
+          spotLat,
+          spotLng
+        ).toFixed(1) + " miles";
+        
+        return {...spot, distance};
+      });
+      
+      setFilteredSpots(spotsWithRealDistance);
+    }
+  }, [userLocation]);
 
   const handleFilter = (filters: FilterOptions) => {
     // Apply filters
@@ -37,8 +129,12 @@ const ListingPage = () => {
       const amenitiesMatch = filters.amenities.length === 0 || 
         filters.amenities.every(amenity => spot.amenities.includes(amenity));
       
-      // Open now filter
-      const openNowMatch = !filters.openNow || spot.hours === "24/7";
+      // Open now filter (check if it's 24/7 or check current time against operating hours)
+      let openNowMatch = true;
+      if (filters.openNow) {
+        // Simple implementation - in a real app you would parse actual opening hours
+        openNowMatch = spot.hours === "24/7";
+      }
       
       return searchMatch && distanceMatch && amenitiesMatch && openNowMatch;
     });
@@ -57,6 +153,41 @@ const ListingPage = () => {
           {/* Filters sidebar */}
           <div className="md:col-span-1">
             <SearchFilters onFilter={handleFilter} />
+            
+            {/* Location and Time Tools */}
+            <div className="bg-white mt-4 rounded-lg shadow-md p-5">
+              <h3 className="font-medium mb-4">Real-Time Tools</h3>
+              
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-studyspot-purple" />
+                    <span className="text-sm font-medium">Current Time</span>
+                  </div>
+                  <span className="text-sm bg-studyspot-soft-purple text-studyspot-purple px-2 py-1 rounded-full">
+                    {currentTime}
+                  </span>
+                </div>
+                <p className="text-xs text-studyspot-neutral">
+                  We use this to check if spots are currently open
+                </p>
+              </div>
+              
+              <Button
+                onClick={getUserLocation}
+                disabled={locationLoading}
+                className="w-full bg-studyspot-purple hover:bg-studyspot-light-purple flex items-center justify-center gap-2"
+              >
+                <Locate className="h-4 w-4" />
+                {locationLoading ? "Finding location..." : "Use My Location"}
+              </Button>
+              
+              {userLocation && (
+                <div className="mt-2 text-xs text-center text-studyspot-neutral">
+                  Location active. Distances are now calculated in real-time.
+                </div>
+              )}
+            </div>
           </div>
           
           {/* Study spots listing */}

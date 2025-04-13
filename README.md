@@ -49,7 +49,7 @@ Try it here: ([https://your-deployment-link.vercel.app](https://studyspaces-five
 ---
 
 ## 💭 Future Improvements
-
+ 
 - [ ] Add user reviews and custom ratings
 - [ ] Allow users to submit their favorite study spots
 - [ ] Implement filters (Wi-Fi quality, noise level, hours)

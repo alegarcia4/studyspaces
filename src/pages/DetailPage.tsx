@@ -159,10 +159,10 @@ const DetailPage = () => {
       <div className="min-h-screen flex flex-col bg-background text-foreground">
         <Navbar />
         <div className="container mx-auto px-4 py-16 text-center flex-1 flex flex-col items-center justify-center">
-          <h1 className="text-3xl font-bold mb-4">Study Spot Not Found</h1>
-          <p className="text-muted-foreground mb-8">The study spot you're looking for doesn't exist or has been removed.</p>
+          <h1 className="text-3xl font-bold mb-4">Study Space Not Found</h1>
+          <p className="text-muted-foreground mb-8">The study space you're looking for doesn't exist or has been removed.</p>
           <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
-            <Link to="/spots">Browse Study Spots</Link>
+            <Link to="/spots">Browse Study Spaces</Link>
           </Button>
         </div>
       </div>
@@ -178,7 +178,7 @@ const DetailPage = () => {
           <Button asChild variant="ghost" className="flex items-center gap-2 text-muted-foreground hover:text-foreground">
             <Link to="/spots">
               <ChevronLeft className="h-4 w-4" />
-              Back to spots
+              Back to Spaces
             </Link>
           </Button>
         </div>
@@ -295,7 +295,7 @@ const DetailPage = () => {
              </div>
              {/* Submission info */}
              <div className="mt-8 pt-6 border-t border-border text-xs text-muted-foreground">
-               <p>Spot submitted by {spot.submittedBy} on {new Date(spot.submittedDate).toLocaleDateString()}</p>
+               <p>Space submitted by {spot.submittedBy} on {new Date(spot.submittedDate).toLocaleDateString()}</p>
              </div>
           </div>
         </div>

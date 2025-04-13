@@ -19,6 +19,7 @@ const options = {
   zoomControl: true,
 };
 
+
 interface MapViewProps {
   spots: StudySpot[];
   userLocation: { lat: number; lng: number } | null;
@@ -65,7 +66,7 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
     }
     
     // Default to a central point if no user location
-    return { lat: 34.052235, lng: -118.243683 }; // Los Angeles coordinates
+    return { lat: 33.8826, lng: -117.8851 }; // csuf
   }, [spots, userLocation]);
 
   const mapCenter = getMapCenter();

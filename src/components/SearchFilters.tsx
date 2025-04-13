@@ -97,7 +97,7 @@ const SearchFilters = ({ onFilter }: SearchFiltersProps) => {
   return (
     // Use bg-card, text-foreground, text-muted-foreground, border-border
     <div className="bg-card rounded-lg p-5 border border-border text-foreground">
-      <h3 className="text-lg font-semibold mb-4">Filter Spots</h3>
+      <h3 className="text-lg font-semibold mb-4">Filter Spaces</h3>
       <div className="space-y-6">
         {/* Search Input */}
         <div className="relative">

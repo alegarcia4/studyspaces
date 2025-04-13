@@ -190,7 +190,7 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
                                 position={spot.coordinates}
                                 onClick={() => handleMarkerClick(spot)}
                                 icon={{ // Custom icon for spots
-                                    url: '/map-marker-icon.svg', // Example path, create this SVG
+                                    url: '/tuffy-charging.svg', // Example path, create this SVG
                                     scaledSize: new google.maps.Size(30, 30),
                                     anchor: new google.maps.Point(15, 30), // Point at the bottom center
                                 }}

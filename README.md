@@ -15,7 +15,7 @@ Built to help students and remote workers easily find the perfect environment fo
 
 ## 🚀 Live Demo
 
-Try it here: ([https://your-deployment-link.vercel.app](https://studyspaces-five.vercel.app))
+Try it here: [https://studyspaces-five.vercel.app/](https://studyspaces-five.vercel.app)
 
 ---
 
@@ -59,7 +59,7 @@ Try it here: ([https://your-deployment-link.vercel.app](https://studyspaces-five
 
 ## 👤 Authors
 
-**Alessandro Garcia, Kieren Armas, Trevor Ngo, and Taj Raysun ** – ([https://github.com/yourusername](https://github.com/alegarcia4))
+**Alessandro Garcia, Kieren Armas, Trevor Ngo, and Taj Raysun ** 
 ---
 ## 📄 License
 This project was made for FullyHacks 2025!

@@ -104,7 +104,7 @@ const Navbar = () => {
                     <div className="flex justify-between items-center">
                         <Link to="/" className="flex items-center gap-2 text-foreground hover:text-primary transition-colors">
                             <MapPin className="h-6 w-6 text-primary" />
-                            <span className="font-bold text-xl">StudySpace</span>
+                            <span className="font-bold text-xl">StudySpace 🚀</span>
                         </Link>
 
                         <div className="hidden md:flex items-center gap-6">

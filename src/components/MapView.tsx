@@ -19,6 +19,8 @@ const options = {
   zoomControl: true,
 };
 
+// Cal State Fullerton coordinates
+const csufCoordinates = { lat: 33.8816, lng: -117.8854 };
 
 interface MapViewProps {
   spots: StudySpot[];

@@ -55,7 +55,7 @@ const Index = () => {
                  <MapPin className="h-7 w-7" />
                </div>
                <h3 className="text-xl font-semibold mb-3 text-foreground">Find Nearby Spaces</h3>
-               <p className="text-muted-foreground text-sm">Quickly locate study spots around campus with details on distance and amenities.</p>
+               <p className="text-muted-foreground text-sm">Quickly locate study spaces around campus with details on distance and amenities.</p>
              </div>
 
              <div className="flex flex-col items-center text-center">

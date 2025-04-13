@@ -141,7 +141,7 @@ const MapView = ({ spots, userLocation }: MapViewProps) => {
             <div className="p-4 border-b border-border">
                 <h3 className="font-medium text-card-foreground">Map View</h3>
                 <p className="text-xs text-muted-foreground mt-1">
-                    {spots.length} study spots shown
+                    {spots.length} study spaces shown
                 </p>
             </div>
 
